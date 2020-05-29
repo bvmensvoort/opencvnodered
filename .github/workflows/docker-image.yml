@@ -15,6 +15,14 @@ jobs:
 
     steps:
 
+    - name: Checkout
+      uses: actions/checkout@v2.2.0
+      with:
+        # Repository name with owner. For example, actions/checkout
+        #repository: # optional, default is ${{ github.repository }}
+        # The branch, tag or SHA to checkout. When checking out the repository that triggered a workflow, this defaults to the reference or SHA for that event.  Otherwise, defaults to `master`.
+        #ref: # optional      
+
     - name: Build and push Docker images
       uses: docker/build-push-action@v1.1.0
       with:
