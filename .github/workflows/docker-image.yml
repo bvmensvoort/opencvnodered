@@ -33,7 +33,7 @@ jobs:
         # Server address of Docker registry. If not set then will default to Docker Hub
         registry: registry.hub.docker.io # optional
         # Docker repository to tag the image with
-        repository: opencvnodered
+        repository: bvmensvoort/opencvnodered
         # Comma-delimited list of tags. These will be added to the registry/repository to form the image's tags
         tags: opencv4.3.0
         # Automatically tags the built image with the git reference as per the readme
