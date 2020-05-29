@@ -31,11 +31,11 @@ jobs:
         # Password or personal access token used to log in to a Docker registry. If not set then no login will occur
         password: 68079492-1533-4d44-a402-9e1a0746ddc9
         # Server address of Docker registry. If not set then will default to Docker Hub
-        # registry: # optional
+        registry: registry.hub.docker.io # optional
         # Docker repository to tag the image with
         repository: opencvnodered
         # Comma-delimited list of tags. These will be added to the registry/repository to form the image's tags
-        tags: 4.3.0
+        tags: opencv4.3.0
         # Automatically tags the built image with the git reference as per the readme
         #tag_with_ref: # optional
         # Automatically tags the built image with the git short SHA as per the readme
