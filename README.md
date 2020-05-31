@@ -1,12 +1,13 @@
 # Hello world docker action
 
-This action prints "Hello World" or "Hello" + the name of a person to greet to the log.
+This Docker has compiled OpenCV from source (currently 4.3.0).
+In addition it has Node-RED with the OpenCV node installed.
 
 ## Inputs
 
 ### `who-to-greet`
 
-**Required** The name of the person to greet. Default `"World"`.
+
 
 ## Outputs
 
