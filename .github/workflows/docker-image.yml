@@ -19,39 +19,39 @@ jobs:
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}  
       DOCKER_TARGET_PLATFORM: linux/arm/v7
 
-    steps:
+      steps:
 
-    - name: Checkout
-      uses: actions/checkout@v2.2.0
-      #with:
-        # Repository name with owner. For example, actions/checkout
-        #repository: # optional, default is ${{ github.repository }}
-        # The branch, tag or SHA to checkout. When checking out the repository that triggered a workflow, this defaults to the reference or SHA for that event.  Otherwise, defaults to `master`.
-        #ref: # optional      
+        - name: Checkout
+          uses: actions/checkout@v2.2.0
+          #with:
+            # Repository name with owner. For example, actions/checkout
+            #repository: # optional, default is ${{ github.repository }}
+            # The branch, tag or SHA to checkout. When checking out the repository that triggered a workflow, this defaults to the reference or SHA for that event.  Otherwise, defaults to `master`.
+            #ref: # optional      
 
-    - name: Set up Docker Buildx      
-      uses: crazy-max/ghaction-docker-buildx@v1      
-      with:        
-        version: latest
-    
-    - name: Prepare      
-      if: success()      
-      id: prepare      
-      run: |
-        echo ::set-output name=docker_platform::${DOCKER_TARGET_PLATFORM}
-        echo ::set-output name=docker_image::${DOCKER_REGISTRY}/${DOCKER_IMAGE}
-        echo ::set-output name=version::${GITHUB_RUN_NUMBER}
+        - name: Set up Docker Buildx      
+          uses: crazy-max/ghaction-docker-buildx@v1      
+          with:        
+            version: latest
+        
+        - name: Prepare      
+          if: success()      
+          id: prepare      
+          run: |
+            echo ::set-output name=docker_platform::${DOCKER_TARGET_PLATFORM}
+            echo ::set-output name=docker_image::${DOCKER_REGISTRY}/${DOCKER_IMAGE}
+            echo ::set-output name=version::${GITHUB_RUN_NUMBER}
 
-      - name: Docker Login
-        if: success()      
-        run: |        
-          echo "${DOCKER_PASSWORD}" | docker login ${DOCKER_REGISTRY} --username "${DOCKER_USERNAME}" --password-stdin- name: Run Buildx (push image)
-        if: success()      
-        run: |        
-          docker buildx build \        
-          --platform ${{ steps.prepare.outputs.docker_platform }} \
-          --tag ${{ steps.prepare.outputs.docker_image }}:${{ steps.prepare.outputs.version }} \
-          --file ./Dockerfile \
-          --build-arg OPENCV_RELEASE=4.3.0 \
-          --build-arg NODERED_RELEASE=latest \
-          --output type=image,push=true .
+          - name: Docker Login
+            if: success()      
+            run: |        
+              echo "${DOCKER_PASSWORD}" | docker login ${DOCKER_REGISTRY} --username "${DOCKER_USERNAME}" --password-stdin- name: Run Buildx (push image)
+            if: success()      
+            run: |        
+              docker buildx build \        
+              --platform ${{ steps.prepare.outputs.docker_platform }} \
+              --tag ${{ steps.prepare.outputs.docker_image }}:${{ steps.prepare.outputs.version }} \
+              --file ./Dockerfile \
+              --build-arg OPENCV_RELEASE=4.3.0 \
+              --build-arg NODERED_RELEASE=latest \
+              --output type=image,push=true .
