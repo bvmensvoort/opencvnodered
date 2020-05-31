@@ -11,7 +11,13 @@ jobs:
 
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
+    env:      
+      DOCKER_REGISTRY: registry.hub.docker.com 
+      DOCKER_IMAGE: bvmensvoort/opencvnodered     
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}  
+      DOCKER_TARGET_PLATFORM: linux/arm/v7
 
     steps:
 
@@ -23,38 +29,29 @@ jobs:
         # The branch, tag or SHA to checkout. When checking out the repository that triggered a workflow, this defaults to the reference or SHA for that event.  Otherwise, defaults to `master`.
         #ref: # optional      
 
-    - name: Build and push Docker images
-      uses: docker/build-push-action@v1.1.0
-      with:
-        # Username used to log in to a Docker registry. If not set then no login will occur
-        username: bvmensvoort
-        # Password or personal access token used to log in to a Docker registry. If not set then no login will occur
-        password: 68079492-1533-4d44-a402-9e1a0746ddc9
-        # Server address of Docker registry. If not set then will default to Docker Hub
-        #registry: registry.hub.docker.io # optional
-        # Docker repository to tag the image with
-        repository: bvmensvoort/opencvnodered
-        # Comma-delimited list of tags. These will be added to the registry/repository to form the image's tags
-        tags: opencv4.3.0
-        # Automatically tags the built image with the git reference as per the readme
-        #tag_with_ref: # optional
-        # Automatically tags the built image with the git short SHA as per the readme
-        #tag_with_sha: # optional
-        # Path to the build context
-        #path: / # optional, default is .
-        # Path to the Dockerfile (Default is '{path}/Dockerfile')
-        #dockerfile: # optional
-        # Sets the target stage to build
-        #target: # optional
-        # Always attempt to pull a newer version of the image
-        #always_pull: # optional
-        # Comma-delimited list of build-time variables
-        build_args: OPENCV_RELEASE=4.3.0
-        # Comma-delimited list of images to consider as cache sources
-        #cache_froms: # optional
-        # Comma-delimited list of labels to add to the built image
-        #labels: # optional
-        # Adds labels with git repository information to the built image
-        #add_git_labels: # optional
-        # Whether to push the image
-        #push: # optional, default is true
+    - name: Set up Docker Buildx      
+      uses: crazy-max/ghaction-docker-buildx@v1      
+      with:        
+        version: latest
+    
+    - name: Prepare      
+      if: success()      
+      id: prepare      
+      run: |
+        echo ::set-output name=docker_platform::${DOCKER_TARGET_PLATFORM}
+        echo ::set-output name=docker_image::${DOCKER_REGISTRY}/${DOCKER_IMAGE}
+        echo ::set-output name=version::${GITHUB_RUN_NUMBER}
+
+      - name: Docker Login
+        if: success()      
+        run: |        
+          echo "${DOCKER_PASSWORD}" | docker login ${DOCKER_REGISTRY} --username "${DOCKER_USERNAME}" --password-stdin- name: Run Buildx (push image)
+        if: success()      
+        run: |        
+          docker buildx build \        
+          --platform ${{ steps.prepare.outputs.docker_platform }} \
+          --tag ${{ steps.prepare.outputs.docker_image }}:${{ steps.prepare.outputs.version }} \
+          --file ./Dockerfile \
+          --build-arg OPENCV_RELEASE=4.3.0 \
+          --build-arg NODERED_RELEASE=latest \
+          --output type=image,push=true .

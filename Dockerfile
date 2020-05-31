@@ -7,6 +7,10 @@ ARG OPENCV_RELEASE=4.3.0
 ARG ADDITIONAL_BUILD_FLAGS
 # Optionally set to any value (1, "true", anything but emptystring) to enable GUI features
 ARG ENABLE_IMSHOW_AND_WAITKEY
+# Set nodered version, at the moment it is 1.0.6.
+ARG NODERED_RELEASE=latest
+# Set NodeJS version, at the moment it is 8.10.0~dfsg-2ubuntu0.4
+ARG NODEJS_RELEASE=8.10.\*
 
 # Install build tools
 RUN apt-get update && \
@@ -92,12 +96,12 @@ RUN mkdir /opencv && \
 
 # Setup Node-Red
 RUN export PKG_CONFIG_OPENCV4=1 && \
-    apt-get install -y nodejs npm && \
+    apt-get install -y nodejs=${NODEJS_RELEASE} npm && \
     # /usr/src/node-red: Home directory for Node-RED application source code.
     # /data: User data directory, contains flows, config and nodes.
     mkdir -p /usr/src/node-red /data && \
     cd /usr/src/node-red && \
-    npm install node-red && \
+    npm install node-red@${NODERED_RELEASE} && \
     cd /data && \
     npm install node-red-contrib-opencv
 
