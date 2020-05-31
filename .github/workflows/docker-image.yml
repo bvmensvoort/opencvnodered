@@ -46,7 +46,9 @@ jobs:
       if: success()      
       run: |
         echo "${DOCKER_PASSWORD}" | docker login ${DOCKER_REGISTRY} --username "${DOCKER_USERNAME}" --password-stdin- name: Run Buildx (push image)
-      if: success()      
+
+    - name: Build and push image (using buildx)
+        if: success()
       run: |        
         docker buildx build \        
         --platform ${{ steps.prepare.outputs.docker_platform }} \
