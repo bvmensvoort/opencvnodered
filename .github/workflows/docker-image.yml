@@ -50,10 +50,11 @@ jobs:
     - name: Build and push image (using buildx)
       if: success()
       run: |
-        docker buildx build \        
+        docker buildx build \
         --platform ${{ steps.prepare.outputs.docker_platform }} \
         --tag ${{ steps.prepare.outputs.docker_image }}:${{ steps.prepare.outputs.buildx-version }} \
         --file ./Dockerfile \
         --build-arg OPENCV_RELEASE=4.3.0 \
         --build-arg NODERED_RELEASE=latest \
-        --output type=image,push=true .
+        --output type=image,push=true \
+        .
