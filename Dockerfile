@@ -21,7 +21,7 @@ RUN export LANG=C.UTF-8
 
 # Install dependencies for opencv
 RUN apt-get update && \
-    apt-get install -y \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         gfortran git \
         libjpeg-dev libtiff-dev libgif-dev \
         libavcodec-dev libavformat-dev libswscale-dev \
