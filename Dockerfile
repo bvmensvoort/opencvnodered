@@ -29,6 +29,7 @@ RUN apt-get update && \
         liblapack-dev libhdf5-dev \
         gcc-arm* protobuf-compiler \
         python3-dev python3-pip \
+        python3-setuptools python3-wheel python3-numpy python3-scipy \
         qtbase5-dev qtdeclarative5-dev \
         libaec-dev libblosc-dev libffi-dev libbrotli-dev libboost-all-dev libbz2-dev \
         libgif-dev libopenjp2-7-dev liblcms2-dev libjpeg-dev libjxr-dev liblz4-dev liblzma-dev libpng-dev libsnappy-dev libwebp-dev libzopfli-dev libzstd-dev
@@ -51,8 +52,6 @@ RUN mkdir /tmp/tiff && cd /tmp/tiff && \
 # Install Python dependencies.
 RUN export LANG=C.UTF-8 && \
     pip3 install --no-cache-dir Cython && \
-    pip3 install --extra-index-url=https://gergely.imreh.net/wheels/ numpy && \
-    pip3 install --extra-index-url=https://gergely.imreh.net/wheels/ scipy && \
     pip3 install matplotlib && \
     pip3 install scikit-image scikit-learn ipython
 
