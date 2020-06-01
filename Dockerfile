@@ -52,7 +52,8 @@ RUN mkdir /tmp/tiff && cd /tmp/tiff && \
 RUN export LANG=C.UTF-8 && \
     pip3 install --no-cache-dir Cython && \
     pip3 install --extra-index-url=https://gergely.imreh.net/wheels/ numpy && \
-    pip3 install --extra-index-url=https://gergely.imreh.net/wheels/ scipy matplotlib && \
+    pip3 install --extra-index-url=https://gergely.imreh.net/wheels/ scipy && \
+    pip3 install matplotlib && \
     pip3 install scikit-image scikit-learn ipython
 
 # Build OpenCV
