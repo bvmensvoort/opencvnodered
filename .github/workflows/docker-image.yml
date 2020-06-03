@@ -17,7 +17,7 @@ jobs:
       DOCKER_IMAGE: bvmensvoort/opencvnodered     
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}  
-      DOCKER_TARGET_PLATFORM: linux/arm/v7
+      DOCKER_TARGET_PLATFORMS: linux/arm/v7
 
     steps:
 
@@ -38,7 +38,22 @@ jobs:
       if: success()      
       id: prepare      
       run: |
-        echo ::set-output name=docker_platform::${DOCKER_TARGET_PLATFORM}
+        VERSION=edge
+
+        if [[ $GITHUB_REF == refs/tags/* ]]; then
+          VERSION=${GITHUB_REF#refs/tags/v}
+        fi
+
+        if [ "${{ github.event_name }}" = "schedule" ]; then
+          VERSION=nightly
+        fi
+
+        TAGS="--tag ${DOCKER_IMAGE}:${VERSION}"
+        if [[ $VERSION =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
+          TAGS="$TAGS --tag ${DOCKER_IMAGE}:latest"
+        fi
+
+        echo ::set-output name=docker_platform::${DOCKER_TARGET_PLATFORMS}
         echo ::set-output name=docker_image::${DOCKER_REGISTRY}/${DOCKER_IMAGE}
         echo ::set-output name=buildx-version::${GITHUB_RUN_NUMBER}
 
@@ -52,9 +67,9 @@ jobs:
       run: |
         docker buildx build \
         --platform ${{ steps.prepare.outputs.docker_platform }} \
-        --tag ${{ steps.prepare.outputs.docker_image }}:${{ steps.prepare.outputs.buildx-version }} \
         --file ./Dockerfile \
         --build-arg OPENCV_RELEASE=4.3.0 \
         --build-arg NODERED_RELEASE=latest \
         --output type=image,push=true \
+        ${TAGS} \
         .

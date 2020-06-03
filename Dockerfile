@@ -103,7 +103,7 @@ RUN export PKG_CONFIG_OPENCV4=1 && \
     npm install node-red-contrib-opencv
 
 # Set work directory
-WORKDIR /usr/src/node-red
+WORKDIR /usr/src/node-red/node_modules/node-red
 
 # Env variables of Node-Red
 ENV NODE_PATH=/usr/src/node-red/node_modules:/data/node_modules \
