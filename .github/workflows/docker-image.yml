@@ -38,14 +38,10 @@ jobs:
       if: success()      
       id: prepare      
       run: |
-        VERSION=edge
+        VERSION=latest
 
         if [[ $GITHUB_REF == refs/tags/* ]]; then
           VERSION=${GITHUB_REF#refs/tags/v}
-        fi
-
-        if [ "${{ github.event_name }}" = "schedule" ]; then
-          VERSION=nightly
         fi
 
         TAGS="--tag ${DOCKER_IMAGE}:${VERSION}"
