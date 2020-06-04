@@ -56,6 +56,7 @@ jobs:
         echo ::set-output name=docker_platform::${DOCKER_TARGET_PLATFORMS}
         echo ::set-output name=docker_image::${DOCKER_REGISTRY}/${DOCKER_IMAGE}
         echo ::set-output name=buildx-version::${GITHUB_RUN_NUMBER}
+        echo ::set-output name=tags::${TAGS}
 
     - name: Docker Login
       if: success()      
@@ -71,5 +72,5 @@ jobs:
         --build-arg OPENCV_RELEASE=4.3.0 \
         --build-arg NODERED_RELEASE=latest \
         --output type=image,push=true \
-        ${TAGS} \
+        ${{ steps.prepare.outputs.tags }} \
         .
