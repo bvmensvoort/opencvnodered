@@ -100,7 +100,7 @@ RUN export PKG_CONFIG_OPENCV4=1 && \
     cd /usr/src/node-red && \
     npm install node-red@${NODERED_RELEASE} && \
     cd /data && \
-    npm install node-red-contrib-opencv
+    npm install --save node-red-contrib-opencv
 
 # Set work directory
 WORKDIR /usr/src/node-red/node_modules/node-red
