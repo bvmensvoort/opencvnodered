@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 # Set opencv version, default currently latest (explicitly numbered)
 ARG OPENCV_RELEASE=4.4.0
@@ -10,7 +10,7 @@ ARG ENABLE_IMSHOW_AND_WAITKEY
 # Set nodered version, at the moment it is 1.1.3.
 ARG NODERED_RELEASE=latest
 # Set NodeJS version, at the moment it is 8.10.0~dfsg-2ubuntu0.4
-ARG NODEJS_RELEASE=8.10.\*
+ARG NODEJS_RELEASE
 
 # Install build tools
 RUN apt-get update && \
@@ -93,7 +93,7 @@ RUN mkdir /opencv && \
 
 # Setup Node-Red
 RUN export PKG_CONFIG_OPENCV4=1 && \
-    apt-get install -y nodejs=${NODEJS_RELEASE} npm && \
+    apt-get install -y nodejs${NODEJS_RELEASE} npm && \
     # /usr/src/node-red: Home directory for Node-RED application source code.
     # /data: User data directory, contains flows, config and nodes.
     mkdir -p /usr/src/node-red /data && \

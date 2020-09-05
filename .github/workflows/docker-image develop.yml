@@ -1,0 +1,72 @@
+name: Node-RED with OpenCV
+
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-20.04
+    env:      
+      DOCKER_REGISTRY: registry.hub.docker.com 
+      DOCKER_IMAGE: bvmensvoort/opencvnodered     
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}  
+      DOCKER_TARGET_PLATFORMS: linux/arm/v7
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v2.2.0
+      #with:
+        # Repository name with owner. For example, actions/checkout
+        #repository: # optional, default is ${{ github.repository }}
+        # The branch, tag or SHA to checkout. When checking out the repository that triggered a workflow, this defaults to the reference or SHA for that event.  Otherwise, defaults to `master`.
+        #ref: # optional      
+
+    - name: Set up Docker Buildx      
+      uses: crazy-max/ghaction-docker-buildx@v1      
+      with:        
+        buildx-version: latest
+    
+    - name: Prepare      
+      if: success()      
+      id: prepare      
+      run: |
+        VERSION=latest
+
+        if [[ $GITHUB_REF == refs/tags/* ]]; then
+          VERSION=${GITHUB_REF#refs/tags/v}
+        fi
+
+        TAGS="--tag ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${VERSION}"
+        if [[ $VERSION =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
+          TAGS="$TAGS --tag ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:latest"
+        fi
+
+        echo ::set-output name=docker_platform::${DOCKER_TARGET_PLATFORMS}
+        echo ::set-output name=docker_image::${DOCKER_REGISTRY}/${DOCKER_IMAGE}
+        echo ::set-output name=buildx-version::${GITHUB_RUN_NUMBER}
+        echo ::set-output name=tags::${TAGS}
+
+    - name: Docker Login
+      if: success()      
+      run: |
+        echo "${DOCKER_PASSWORD}" | docker login ${DOCKER_REGISTRY} --username "${DOCKER_USERNAME}" --password-stdin
+
+    - name: Build and push image (using buildx)
+      if: success()
+      run: |
+        docker buildx build \
+        --platform ${{ steps.prepare.outputs.docker_platform }} \
+        ${{ steps.prepare.outputs.tags }} \
+        --file ./Dockerfile \
+        --build-arg OPENCV_RELEASE=4.3.0 \
+        --build-arg NODERED_RELEASE=latest \
+        --output type=image,push=false \
+        .
