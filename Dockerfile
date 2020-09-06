@@ -13,6 +13,7 @@ ARG NODERED_RELEASE=latest
 ARG NODEJS_RELEASE=\=8.10.\*
 
 # Install build tools
+ENV TZ=Europe/Amsterdam
 RUN apt-get update && \
     apt-get install -y wget unzip build-essential cmake
 
@@ -20,7 +21,6 @@ RUN apt-get update && \
 RUN export LANG=C.UTF-8
 
 # Install dependencies for opencv
-ENV TZ=Europe/Amsterdam
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         gfortran git \
