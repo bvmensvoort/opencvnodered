@@ -17,6 +17,7 @@ jobs:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}  
       DOCKER_TARGET_PLATFORMS: linux/arm/v7
+      OPENCV_RELEASE: 4.4.0
 
     steps:
 
