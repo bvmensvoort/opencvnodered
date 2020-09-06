@@ -20,6 +20,7 @@ RUN apt-get update && \
 RUN export LANG=C.UTF-8
 
 # Install dependencies for opencv
+ENV TZ=Europe/Amsterdam
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         gfortran git \
