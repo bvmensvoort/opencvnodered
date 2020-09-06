@@ -15,7 +15,7 @@ ARG NODEJS_RELEASE=\=8.10.\*
 # Install build tools
 ENV TZ=Europe/Amsterdam
 RUN apt-get update && \
-    apt-get install -y wget unzip build-essential cmake
+    DEBIAN_FRONTEND=noninteractive apt-get install -y wget unzip build-essential cmake
 
 # Used for Python dependencies.
 RUN export LANG=C.UTF-8
