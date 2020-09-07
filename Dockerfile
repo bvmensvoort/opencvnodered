@@ -57,8 +57,8 @@ RUN mkdir /tmp/tiff && cd /tmp/tiff && \
 # Build OpenCV
 RUN mkdir /opencv && \
     cd /opencv && \
-    wget https://github.com/opencv/opencv/archive/${OPENCV_RELEASE}.zip -O opencv.zip && \
-    wget https://github.com/opencv/opencv_contrib/archive/${OPENCV_RELEASE}.zip -O contrib.zip && \
+    curl -o opencv.zip -L https://github.com/opencv/opencv/archive/${OPENCV_RELEASE}.zip && \
+    curl -o contrib.zip -L https://github.com/opencv/opencv_contrib/archive/${OPENCV_RELEASE}.zip && \
     unzip opencv.zip && \
     unzip contrib.zip && \
     mkdir build && \
