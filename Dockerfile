@@ -15,6 +15,7 @@ ARG NODEJS_RELEASE=\=10.19.\*
 # Install build tools
 ENV TZ=Europe/Amsterdam
 RUN apt-get update && \
+    update-ca-certificates -f && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y wget unzip build-essential cmake
 
 # Used for Python dependencies.
