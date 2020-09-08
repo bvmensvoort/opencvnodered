@@ -27,6 +27,7 @@ RUN python3 -c "import cv2; print(cv2.__version__)"
 # Setup Node-Red
 RUN export PKG_CONFIG_OPENCV4=1 && \
     apt-get install -y nodejs${NODEJS_RELEASE} npm && \
+    npm config set registry http://registry.npmjs.org/ && \
     # /usr/src/node-red: Home directory for Node-RED application source code.
     # /data: User data directory, contains flows, config and nodes.
     mkdir -p /usr/src/node-red /data && \
