@@ -43,10 +43,9 @@ RUN mkdir /tmp/opencv_build && cd /tmp/opencv_build && \
 
 # Setup Node-Red
 RUN export PKG_CONFIG_OPENCV4=1 && \
-    if [ -n "${NODEJS_RELEASE}" ]; then \
-        apt-get install -y nodejs=${NODEJS_RELEASE} npm && \
-    else \
-        apt-get install -y nodejs npm \
+    if [ -n "${NODEJS_RELEASE}" ]; \
+        then apt-get install -y nodejs=${NODEJS_RELEASE} npm; \
+        else apt-get install -y nodejs npm; \
     fi && \
     # /usr/src/node-red: Home directory for Node-RED application source code.
     # /data: User data directory, contains flows, config and nodes.
