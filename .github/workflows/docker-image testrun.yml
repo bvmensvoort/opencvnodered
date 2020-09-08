@@ -2,7 +2,7 @@ name: Node-RED with OpenCV
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ develop, testblog1 ]
   pull_request:
     branches: [ develop ]
 

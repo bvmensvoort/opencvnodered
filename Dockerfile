@@ -14,83 +14,15 @@ ARG NODEJS_RELEASE=\=10.19.\*
 
 # Install build tools
 ENV TZ=Europe/Amsterdam
-RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y wget unzip build-essential cmake curl
 
 # Used for Python dependencies.
-RUN export LANG=C.UTF-8
+ENV LANG=C.UTF-8
 
-# Install dependencies for opencv
+# Install OpenCV
 RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-        gfortran git \
-        libjpeg-dev libtiff-dev libgif-dev \
-        libavcodec-dev libavformat-dev libswscale-dev \
-        libgtk2.0-dev libcanberra-gtk* \
-        libxvidcore-dev libx264-dev libgtk-3-dev \
-        libtbb2 libtbb-dev libdc1394-22-dev libv4l-dev \
-        libopenblas-dev libatlas-base-dev libblas-dev \
-        liblapack-dev libhdf5-dev \
-        gcc-arm* protobuf-compiler \
-        python3-dev python3-pip \
-        python3-setuptools python3-wheel cython python3-numpy python3-scipy python3-matplotlib python3-pywt python3-sklearn python3-sklearn-lib python3-skimage ipython3 \
-        qtbase5-dev qtdeclarative5-dev \
-        libaec-dev libblosc-dev libffi-dev libbrotli-dev libboost-all-dev libbz2-dev \
-        libgif-dev libopenjp2-7-dev liblcms2-dev libjpeg-dev libjxr-dev liblz4-dev liblzma-dev libpng-dev libsnappy-dev libwebp-dev libzopfli-dev libzstd-dev
+    DEBIAN_FRONTEND=noninteractive apt-get install -y libopencv-dev python3-opencv
 
-# Optional dependencies for GUI features
-# Using cv.imshow() or cv.waitkey() requires sharing xserver with docker:
-#> running `xhost local:root` on host machine (before docker run); later remove with `xhost -local:root`
-#> using following docker run flags: --network=host -e DISPLAY=$DISPLAY
-RUN if [ -n "${ENABLE_IMSHOW_AND_WAITKEY}" ]; then apt-get install -y libgtk2.0-dev pkg-config; fi;
-
-# Build latest version of tiff from source
-RUN mkdir /tmp/tiff && cd /tmp/tiff && \
-    wget -qO- http://download.osgeo.org/libtiff/tiff-4.1.0.tar.gz | tar -xvz -C /tmp/tiff && \
-    cd tiff-4.1.0 && \
-    ./configure && \
-    make && \
-    make install && \
-    rm -rf /tmp/tiff
-
-# Build OpenCV
-RUN mkdir /opencv && \
-    cd /opencv && \
-    curl -o opencv.zip -L https://github.com/opencv/opencv/archive/${OPENCV_RELEASE}.zip && \
-    curl -o contrib.zip -L https://github.com/opencv/opencv_contrib/archive/${OPENCV_RELEASE}.zip && \
-    unzip opencv.zip && \
-    unzip contrib.zip && \
-    mkdir build && \
-    cd build && \
-    cmake \
-        -D CMAKE_BUILD_TYPE=RELEASE \
-        -D CMAKE_INSTALL_PREFIX=/usr/local \
-        -D OPENCV_EXTRA_MODULES_PATH=../opencv_contrib-${OPENCV_RELEASE}/modules \
-        -D BUILD_JAVA=OFF \
-        -D WITH_OPENMP=ON \
-        -D BUILD_TIFF=ON \
-        -D WITH_FFMPEG=ON \
-        -D WITH_GSTREAMER=ON \
-        -D WITH_TBB=ON \
-        -D BUILD_TBB=ON \
-        -D BUILD_TESTS=OFF \
-        -D WITH_EIGEN=OFF \
-        -D WITH_V4L=ON \
-        -D WITH_LIBV4L=ON \
-        -D WITH_VTK=OFF \
-        -D OPENCV_EXTRA_EXE_LINKER_FLAGS=-latomic \
-        -D OPENCV_ENABLE_NONFREE=ON \
-        -D BUILD_NEW_PYTHON_SUPPORT=ON \
-        -D BUILD_opencv_python3=TRUE \
-        -D OPENCV_GENERATE_PKGCONFIG=ON \
-        -D INSTALL_C_EXAMPLES=OFF \
-        -D INSTALL_PYTHON_EXAMPLES=OFF \
-        -D BUILD_EXAMPLES=OFF \
-        ${ADDITIONAL_BUILD_FLAGS} \
-        ../opencv-${OPENCV_RELEASE} && \
-    make -j2 && \
-    make install && \
-    ldconfig
+RUN python3 -c "import cv2; print(cv2.__version__)"
 
 # Setup Node-Red
 RUN export PKG_CONFIG_OPENCV4=1 && \
