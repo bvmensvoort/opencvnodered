@@ -31,11 +31,27 @@ RUN mkdir /tmp/opencv_build && cd /tmp/opencv_build && \
     mkdir -p build && cd build && \
     cmake -D CMAKE_BUILD_TYPE=RELEASE \
     -D CMAKE_INSTALL_PREFIX=/usr/local \
-    -D INSTALL_C_EXAMPLES=ON \
-    -D INSTALL_PYTHON_EXAMPLES=ON \
+    -D INSTALL_C_EXAMPLES=OFF \
+    -D INSTALL_PYTHON_EXAMPLES=OFF \
+    -D BUILD_EXAMPLES=OFF \
     -D OPENCV_GENERATE_PKGCONFIG=ON \
     -D OPENCV_EXTRA_MODULES_PATH=~/opencv_build/opencv_contrib/modules \
-    -D BUILD_EXAMPLES=ON .. && \
+    -D BUILD_JAVA=OFF \
+    -D WITH_OPENMP=ON \
+    -D BUILD_TIFF=ON \
+    -D WITH_FFMPEG=ON \
+    -D WITH_GSTREAMER=ON \
+    -D WITH_TBB=ON \
+    -D BUILD_TBB=ON \
+    -D BUILD_TESTS=OFF \
+    -D WITH_EIGEN=ON \
+    -D WITH_V4L=ON \
+    -D WITH_LIBV4L=ON \
+    -D WITH_VTK=OFF \
+    -D OPENCV_EXTRA_EXE_LINKER_FLAGS=-latomic \
+    -D OPENCV_ENABLE_NONFREE=ON \
+    ${ADDITIONAL_BUILD_FLAGS} \
+    .. && \
     make -j2 && \
     make install && \
     pkg-config --modversion opencv4 && \
