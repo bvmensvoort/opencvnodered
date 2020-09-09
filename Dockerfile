@@ -20,23 +20,23 @@ RUN apt-get update && \
     gfortran git \
     libjpeg-dev libpng-dev libtiff-dev \
     libavcodec-dev libavformat-dev libswscale-dev \
-    # libgtk2.0-dev libcanberra-gtk* \
+    # libgtk2.0-dev 
+    libcanberra-gtk* \
     libxvidcore-dev libx264-dev libgtk-3-dev \
     libtbb2 libtbb-dev libdc1394-22-dev libv4l-dev \
     # Hopefully prevent error: Could NOT find BLAS (missing: BLAS_LIBRARIES)
     libopenblas-dev libblas-dev \
     libatlas-base-dev \
-    # liblapack-dev libhdf5-dev \
+    liblapack-dev libhdf5-dev \
     # Hopefully fix error: The C compiler identification is unknown
     gcc-arm* protobuf-compiler \
     # Hopefully fix error: Could NOT find ZLIB (missing: ZLIB_LIBRARY)
-    # zlib1g-dev \
-    # python3-dev python3-pip \
-    python3-dev python3-numpy \
-    #python3-setuptools python3-wheel cython python3-scipy python3-matplotlib python3-pywt python3-sklearn python3-sklearn-lib python3-skimage ipython \
-    #qtbase5-dev qtdeclarative5-dev \
-    #libaec-dev libblosc-dev libffi-dev libbrotli-dev libboost-all-dev libbz2-dev \
-    #libgif-dev libopenjp2-7-dev liblcms2-dev libjpeg-dev libjxr-dev liblz4-dev liblzma-dev libpng-dev libsnappy-dev libwebp-dev libzopfli-dev libzstd-dev
+    zlib1g-dev \
+    python3-dev python3-pip python3-numpy \
+    python3-setuptools python3-wheel cython python3-scipy python3-matplotlib python3-pywt python3-sklearn python3-sklearn-lib python3-skimage ipython \
+    qtbase5-dev qtdeclarative5-dev \
+    libaec-dev libblosc-dev libffi-dev libbrotli-dev libboost-all-dev libbz2-dev \
+    libgif-dev libopenjp2-7-dev liblcms2-dev libjpeg-dev libjxr-dev liblz4-dev liblzma-dev libpng-dev libsnappy-dev libwebp-dev libzopfli-dev libzstd-dev \
     libopenexr-dev \    
     openexr \
     libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev
@@ -55,9 +55,10 @@ RUN mkdir /tmp/opencv_build && cd /tmp/opencv_build && \
     fi && \
     cd /tmp/opencv_build/opencv && \
     mkdir -p build && cd build && \
-    cmake -D CMAKE_BUILD_TYPE=RELEASE \
-    -D CMAKE_INSTALL_PREFIX=/usr/local \
+    cmake \
     -D OPENCV_EXTRA_MODULES_PATH=/tmp/opencv_build/opencv_contrib/modules \
+    -D CMAKE_BUILD_TYPE=RELEASE \
+    -D CMAKE_INSTALL_PREFIX=/usr/local \
     -D BUILD_EXAMPLES=OFF \
     -D OPENCV_GENERATE_PKGCONFIG=ON \
     -D BUILD_JAVA=OFF \
