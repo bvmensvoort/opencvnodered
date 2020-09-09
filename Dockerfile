@@ -30,7 +30,7 @@ RUN mkdir /tmp/opencv_build && cd /tmp/opencv_build && \
         then \
             cd opencv && \
             git checkout tags/${OPENCV_RELEASE} && \
-            cd ../opencv-contrib && \
+            cd ../opencv_contrib && \
             git checkout tags/${OPENCV_RELEASE} && \
             cd ..;  \
     fi && \
