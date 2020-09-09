@@ -33,7 +33,8 @@ RUN apt-get update && \
     # Hopefully fix error: Could NOT find ZLIB (missing: ZLIB_LIBRARY)
     zlib1g-dev \
     python3-dev python3-pip python3-numpy \
-    python3-setuptools python3-wheel cython python3-scipy python3-matplotlib python3-pywt python3-sklearn python3-sklearn-lib python3-skimage ipython \
+    #ipython (not available for ubuntu 20.04)
+    python3-setuptools python3-wheel cython python3-scipy python3-matplotlib python3-pywt python3-sklearn python3-sklearn-lib python3-skimage \
     qtbase5-dev qtdeclarative5-dev \
     libaec-dev libblosc-dev libffi-dev libbrotli-dev libboost-all-dev libbz2-dev \
     libgif-dev libopenjp2-7-dev liblcms2-dev libjpeg-dev libjxr-dev liblz4-dev liblzma-dev libpng-dev libsnappy-dev libwebp-dev libzopfli-dev libzstd-dev \
