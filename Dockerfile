@@ -24,9 +24,16 @@ RUN apt-get update && \
 
 # Download and build OpenCV
 RUN mkdir /tmp/opencv_build && cd /tmp/opencv_build && \
-    git clone https://github.com/opencv/opencv.git && \
-    git clone https://github.com/opencv/opencv_contrib.git && \
-    if [ -n "${OPENCV_RELEASE}" ]; then git checkout ${OPENCV_RELEASE}; fi && \
+    git clone https://github.com/opencv/opencv && \
+    git clone https://github.com/opencv/opencv_contrib && \
+    if [ -n "${OPENCV_RELEASE}" ]; \
+        then \
+            cd opnencv && \
+            git checkout tags/${OPENCV_RELEASE} && \
+            cd ../opencv-contrib && \
+            git checkout tags/${OPENCV_RELEASE} && \
+            cd ..;  \
+    fi && \
     cd /tmp/opencv_build/opencv && \
     mkdir -p build && cd build && \
     cmake -D CMAKE_BUILD_TYPE=RELEASE \
