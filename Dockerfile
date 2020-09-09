@@ -23,7 +23,8 @@ RUN apt-get update && \
     # libgtk2.0-dev libcanberra-gtk* \
     libxvidcore-dev libx264-dev libgtk-3-dev \
     libtbb2 libtbb-dev libdc1394-22-dev libv4l-dev \
-    # libopenblas-dev libblas-dev \
+    # Hopefully prevent error: Could NOT find BLAS (missing: BLAS_LIBRARIES)
+    libopenblas-dev libblas-dev \
     libatlas-base-dev \
     # liblapack-dev libhdf5-dev \
     # Hopefully fix error: The C compiler identification is unknown
@@ -56,11 +57,9 @@ RUN mkdir /tmp/opencv_build && cd /tmp/opencv_build && \
     mkdir -p build && cd build && \
     cmake -D CMAKE_BUILD_TYPE=RELEASE \
     -D CMAKE_INSTALL_PREFIX=/usr/local \
-    -D INSTALL_C_EXAMPLES=OFF \
-    -D INSTALL_PYTHON_EXAMPLES=OFF \
+    -D OPENCV_EXTRA_MODULES_PATH=/tmp/opencv_build/opencv_contrib/modules \
     -D BUILD_EXAMPLES=OFF \
     -D OPENCV_GENERATE_PKGCONFIG=ON \
-    -D OPENCV_EXTRA_MODULES_PATH=/tmp/opencv_build/opencv_contrib/modules \
     -D BUILD_JAVA=OFF \
     -D WITH_OPENMP=ON \
     -D BUILD_TIFF=ON \
@@ -75,6 +74,8 @@ RUN mkdir /tmp/opencv_build && cd /tmp/opencv_build && \
     -D WITH_VTK=OFF \
     -D OPENCV_EXTRA_EXE_LINKER_FLAGS=-latomic \
     -D OPENCV_ENABLE_NONFREE=ON \
+    -D INSTALL_C_EXAMPLES=OFF \
+    -D INSTALL_PYTHON_EXAMPLES=OFF \
     ${ADDITIONAL_BUILD_FLAGS} \
     .. && \
     make -j2 && \
