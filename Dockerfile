@@ -28,7 +28,7 @@ RUN mkdir /tmp/opencv_build && cd /tmp/opencv_build && \
     git clone https://github.com/opencv/opencv_contrib && \
     if [ -n "${OPENCV_RELEASE}" ]; \
         then \
-            cd opnencv && \
+            cd opencv && \
             git checkout tags/${OPENCV_RELEASE} && \
             cd ../opencv-contrib && \
             git checkout tags/${OPENCV_RELEASE} && \
