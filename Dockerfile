@@ -43,7 +43,7 @@ RUN apt-get update && \
     libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev
 
 # Download and build OpenCV
-RUN mkdir /tmp/opencv_build && cd /tmp/opencv_build && \
+RUN mkdir -p /tmp/opencv_build && cd /tmp/opencv_build && \
     git clone https://github.com/opencv/opencv && \
     git clone https://github.com/opencv/opencv_contrib && \
     if [ -n "${OPENCV_RELEASE}" ]; \
@@ -54,7 +54,7 @@ RUN mkdir /tmp/opencv_build && cd /tmp/opencv_build && \
             git checkout tags/${OPENCV_RELEASE} && \
             cd ..;  \
     fi && \
-    cd /tmp/opencv_build/opencv && \
+    cd /tmp/opencv_build && \
     mkdir -p build && cd build && \
     cmake -D OPENCV_EXTRA_MODULES_PATH=../opencv_contrib/modules \
     -D CMAKE_BUILD_TYPE=RELEASE \
