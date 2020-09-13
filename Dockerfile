@@ -46,7 +46,7 @@ RUN apt-get update && \
 
 # Build latest version of cmake to resolve bug
 # https://gitlab.kitware.com/cmake/cmake/-/issues/20568
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y curl &&  \
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y curl libssl-dev &&  \
     if [ -n "${VERBOSE}" ]; then \
         curl -V \
     ;fi && \
