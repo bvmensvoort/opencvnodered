@@ -40,15 +40,16 @@ RUN apt-get update && \
     #qtbase5-dev qtdeclarative5-dev \
     #libaec-dev libblosc-dev libffi-dev libbrotli-dev libboost-all-dev libbz2-dev \
     #libgif-dev libopenjp2-7-dev liblcms2-dev libjpeg-dev libjxr-dev liblz4-dev liblzma-dev libpng-dev libsnappy-dev libwebp-dev libzopfli-dev libzstd-dev
-    libopenexr-dev \    
+    libopenexr-dev \
     openexr \
     libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev
 
 # Build latest version of cmake to resolve bug
 # https://gitlab.kitware.com/cmake/cmake/-/issues/20568
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y wget &&  \
-    mkdir -p /tmp/cmake && \
-    wget -qO- https://github.com/Kitware/CMake/releases/download/v3.18.2/cmake-3.18.2.tar.gz | tar -xvz -C /tmp/cmake && \
+    mkdir -p /tmp/cmake && cd /tmp/cmake && \
+    wget https://github.com/Kitware/CMake/releases/download/v3.18.2/cmake-3.18.2.tar.gz -O /tmp/cmake/cmake.tar.gz && \
+    tar -xvz -C /tmp/cmake -f cmake.tar.gz && \
     cd cmake-3.18.2 && \
     ./configure && \
     make && \
