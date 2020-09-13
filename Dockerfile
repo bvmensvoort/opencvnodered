@@ -78,7 +78,7 @@ RUN mkdir -p /tmp/opencv_build && cd /tmp/opencv_build && \
     -D INSTALL_C_EXAMPLES=OFF \
     -D INSTALL_PYTHON_EXAMPLES=OFF \
     ${ADDITIONAL_BUILD_FLAGS} \
-    .. && \
+    ../opencv && \
     make -j2 && \
     make install && \
     pkg-config --modversion opencv4 && \
