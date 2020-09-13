@@ -46,9 +46,9 @@ RUN apt-get update && \
 
 # Build latest version of cmake to resolve bug
 # https://gitlab.kitware.com/cmake/cmake/-/issues/20568
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y wget &&  \
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y curl &&  \
     mkdir -p /tmp/cmake && cd /tmp/cmake && \
-    wget https://github.com/Kitware/CMake/releases/download/v3.18.2/cmake-3.18.2.tar.gz -O /tmp/cmake/cmake.tar.gz && \
+    curl https://github.com/Kitware/CMake/releases/download/v3.18.2/cmake-3.18.2.tar.gz -O /tmp/cmake/cmake.tar.gz && \
     tar -xvz -C /tmp/cmake -f cmake.tar.gz && \
     cd cmake-3.18.2 && \
     ./configure && \
