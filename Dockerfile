@@ -18,7 +18,7 @@ ARG VERBOSE=true
 ENV TZ=Europe/Amsterdam
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    build-essential pkg-config \
+    build-essential cmake pkg-config \
     gfortran git \
     libjpeg-dev libpng-dev libtiff-dev \
     libavcodec-dev libavformat-dev libswscale-dev \
@@ -46,7 +46,7 @@ RUN apt-get update && \
 
 # Build latest version of cmake to resolve bug
 # https://gitlab.kitware.com/cmake/cmake/-/issues/20568
-RUN apt-get install wget &&  \
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y wget &&  \
     mkdir -p /tmp/cmake && \
     wget -qO- https://github.com/Kitware/CMake/releases/download/v3.18.2/cmake-3.18.2.tar.gz | tar -xvz -C /tmp/cmake && \
     cd cmake-3.18.2 && \
