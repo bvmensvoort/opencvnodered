@@ -59,6 +59,10 @@ RUN mkdir -p /tmp/opencv_build && cd /tmp/opencv_build && \
     cmake -D OPENCV_EXTRA_MODULES_PATH=../opencv_contrib/modules \
     -D CMAKE_BUILD_TYPE=RELEASE \
     -D CMAKE_INSTALL_PREFIX=/usr/local \
+    # Should fix: compiler_id_detection fails for armhf when using QEMU user-mode emulation
+    # https://gitlab.kitware.com/cmake/cmake/-/issues/20568
+    -D_FILE_OFFSET_BITS=64 \
+    #
     -D BUILD_EXAMPLES=OFF \
     -D OPENCV_GENERATE_PKGCONFIG=ON \
     -D BUILD_JAVA=OFF \
