@@ -11,12 +11,14 @@ ARG ENABLE_IMSHOW_AND_WAITKEY
 ARG NODERED_RELEASE=latest
 # Set NodeJS version, at the moment it is 10.19.0~dfsg-3ubuntu1
 ARG NODEJS_RELEASE=10.19.\*
+# Show verbose messages
+ARG VERBOSE=true
 
 # Install build tools
 ENV TZ=Europe/Amsterdam
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    build-essential cmake pkg-config \
+    build-essential pkg-config \
     gfortran git \
     libjpeg-dev libpng-dev libtiff-dev \
     libavcodec-dev libavformat-dev libswscale-dev \
@@ -42,27 +44,37 @@ RUN apt-get update && \
     openexr \
     libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev
 
+# Build latest version of cmake to resolve bug
+# https://gitlab.kitware.com/cmake/cmake/-/issues/20568
+RUN apt-get install wget &&  \
+    mkdir -p /tmp/cmake && \
+    wget -qO- https://github.com/Kitware/CMake/releases/download/v3.18.2/cmake-3.18.2.tar.gz | tar -xvz -C /tmp/cmake && \
+    cd cmake-3.18.2 && \
+    ./configure && \
+    make && \
+    make install
+
 # Download and build OpenCV
-RUN mkdir -p /tmp/opencv_build && cd /tmp/opencv_build && \
+RUN if [ -n "${VERBOSE}" ]; then \
+        date && \
+        cmake --version && \
+        nproc \
+    ;fi && \
+    mkdir -p /tmp/opencv_build && cd /tmp/opencv_build && \
     git clone https://github.com/opencv/opencv && \
     git clone https://github.com/opencv/opencv_contrib && \
-    if [ -n "${OPENCV_RELEASE}" ]; \
-        then \
-            cd opencv && \
-            git checkout tags/${OPENCV_RELEASE} && \
-            cd ../opencv_contrib && \
-            git checkout tags/${OPENCV_RELEASE} && \
-            cd ..;  \
-    fi && \
+    if [ -n "${OPENCV_RELEASE}" ]; then \
+        cd opencv && \
+        git checkout tags/${OPENCV_RELEASE} && \
+        cd ../opencv_contrib && \
+        git checkout tags/${OPENCV_RELEASE} && \
+        cd .. \
+    ;fi && \
     cd /tmp/opencv_build && \
     mkdir -p build && cd build && \
     cmake -D OPENCV_EXTRA_MODULES_PATH=../opencv_contrib/modules \
     -D CMAKE_BUILD_TYPE=RELEASE \
     -D CMAKE_INSTALL_PREFIX=/usr/local \
-    # Should fix: compiler_id_detection fails for armhf when using QEMU user-mode emulation
-    # https://gitlab.kitware.com/cmake/cmake/-/issues/20568
-    -D_FILE_OFFSET_BITS=64 \
-    #
     -D BUILD_EXAMPLES=OFF \
     -D OPENCV_GENERATE_PKGCONFIG=ON \
     -D BUILD_JAVA=OFF \
@@ -86,7 +98,9 @@ RUN mkdir -p /tmp/opencv_build && cd /tmp/opencv_build && \
     make -j2 && \
     make install && \
     pkg-config --modversion opencv4 && \
-    python3 -c "import cv2; print(cv2.__version__)"
+    if [ -n "${VERBOSE}" ]; then \
+        python3 -c "import cv2; print(cv2.__version__)" \
+    ;fi \
 
 # Setup Node-Red
 RUN export PKG_CONFIG_OPENCV4=1 && \
@@ -94,6 +108,9 @@ RUN export PKG_CONFIG_OPENCV4=1 && \
         then apt-get install -y nodejs=${NODEJS_RELEASE} npm; \
         else apt-get install -y nodejs npm; \
     fi && \
+    if [ -n "${VERBOSE}" ]; then \
+        node -v \
+    ;fi \
     # /usr/src/node-red: Home directory for Node-RED application source code.
     # /data: User data directory, contains flows, config and nodes.
     mkdir -p /usr/src/node-red /data && \
