@@ -80,7 +80,7 @@ RUN if [ -n "${VERBOSE}" ]; then \
     cd /tmp/opencv_build && \
     mkdir -p build && cd build && \
     cmake --debug-output \
-        -D OPENCV_EXTRA_MODULES_PATH=../opencv_contrib/modules \
+        -D OPENCV_EXTRA_MODULES_PATH=/tmp/opencv_build/opencv_contrib/modules \
         -D CMAKE_BUILD_TYPE=RELEASE \
         -D CMAKE_INSTALL_PREFIX=/usr/local \
         -D BUILD_EXAMPLES=OFF \
@@ -102,7 +102,7 @@ RUN if [ -n "${VERBOSE}" ]; then \
         -D INSTALL_C_EXAMPLES=OFF \
         -D INSTALL_PYTHON_EXAMPLES=OFF \
         ${ADDITIONAL_BUILD_FLAGS} \
-        ../opencv && \
+        /tmp/opencv_build/opencv && \
     make -j2 && \
     make install && \
     pkg-config --modversion opencv4 && \
