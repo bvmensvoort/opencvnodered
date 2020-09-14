@@ -62,7 +62,8 @@ RUN apt-get update && \
 RUN export LANG=C.UTF-8
 
 # Download and build OpenCV
-RUN export OPENCV_INSTALL_PATH=/opencv_path && \
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y make && \
+    export OPENCV_INSTALL_PATH=/opencv_path && \
     if [ -n "${VERBOSE}" ]; then \
         date && \
         cmake --version && \
