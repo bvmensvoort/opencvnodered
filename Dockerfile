@@ -46,17 +46,20 @@ RUN apt-get update && \
 
 # Build latest version of cmake to resolve bug
 # https://gitlab.kitware.com/cmake/cmake/-/issues/20568
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y curl libssl-dev &&  \
-    if [ -n "${VERBOSE}" ]; then \
-        curl -V \
-    ;fi && \
-    mkdir -p /tmp/cmake && cd /tmp/cmake && \
-    curl --output /tmp/cmake/cmake.tar.gz -L https://github.com/Kitware/CMake/releases/download/v3.18.2/cmake-3.18.2.tar.gz && \
-    tar -xvz -C /tmp/cmake -f cmake.tar.gz && \
-    cd cmake-3.18.2 && \
-    ./configure && \
-    make && \
-    make install
+# RUN DEBIAN_FRONTEND=noninteractive apt-get install -y curl libssl-dev &&  \
+#     if [ -n "${VERBOSE}" ]; then \
+#         curl -V \
+#     ;fi && \
+#     mkdir -p /tmp/cmake && cd /tmp/cmake && \
+#     curl --output /tmp/cmake/cmake.tar.gz -L https://github.com/Kitware/CMake/releases/download/v3.18.2/cmake-3.18.2.tar.gz && \
+#     tar -xvz -C /tmp/cmake -f cmake.tar.gz && \
+#     cd cmake-3.18.2 && \
+#     ./configure && \
+#     make && \
+#     make install
+
+# Used for Python dependencies.
+RUN export LANG=C.UTF-8
 
 # Download and build OpenCV
 RUN if [ -n "${VERBOSE}" ]; then \
@@ -76,29 +79,30 @@ RUN if [ -n "${VERBOSE}" ]; then \
     ;fi && \
     cd /tmp/opencv_build && \
     mkdir -p build && cd build && \
-    cmake -D OPENCV_EXTRA_MODULES_PATH=../opencv_contrib/modules \
-    -D CMAKE_BUILD_TYPE=RELEASE \
-    -D CMAKE_INSTALL_PREFIX=/usr/local \
-    -D BUILD_EXAMPLES=OFF \
-    -D OPENCV_GENERATE_PKGCONFIG=ON \
-    -D BUILD_JAVA=OFF \
-    -D WITH_OPENMP=ON \
-    -D BUILD_TIFF=ON \
-    -D WITH_FFMPEG=ON \
-    -D WITH_GSTREAMER=ON \
-    -D WITH_TBB=ON \
-    -D BUILD_TBB=ON \
-    -D BUILD_TESTS=OFF \
-    -D WITH_EIGEN=ON \
-    -D WITH_V4L=ON \
-    -D WITH_LIBV4L=ON \
-    -D WITH_VTK=OFF \
-    -D OPENCV_EXTRA_EXE_LINKER_FLAGS=-latomic \
-    -D OPENCV_ENABLE_NONFREE=ON \
-    -D INSTALL_C_EXAMPLES=OFF \
-    -D INSTALL_PYTHON_EXAMPLES=OFF \
-    ${ADDITIONAL_BUILD_FLAGS} \
-    ../opencv && \
+    cmake --debug-output \
+        -D OPENCV_EXTRA_MODULES_PATH=../opencv_contrib/modules \
+        -D CMAKE_BUILD_TYPE=RELEASE \
+        -D CMAKE_INSTALL_PREFIX=/usr/local \
+        -D BUILD_EXAMPLES=OFF \
+        -D OPENCV_GENERATE_PKGCONFIG=ON \
+        -D BUILD_JAVA=OFF \
+        -D WITH_OPENMP=ON \
+        -D BUILD_TIFF=ON \
+        -D WITH_FFMPEG=ON \
+        -D WITH_GSTREAMER=ON \
+        -D WITH_TBB=ON \
+        -D BUILD_TBB=ON \
+        -D BUILD_TESTS=OFF \
+        -D WITH_EIGEN=ON \
+        -D WITH_V4L=ON \
+        -D WITH_LIBV4L=ON \
+        -D WITH_VTK=OFF \
+        -D OPENCV_EXTRA_EXE_LINKER_FLAGS=-latomic \
+        -D OPENCV_ENABLE_NONFREE=ON \
+        -D INSTALL_C_EXAMPLES=OFF \
+        -D INSTALL_PYTHON_EXAMPLES=OFF \
+        ${ADDITIONAL_BUILD_FLAGS} \
+        ../opencv && \
     make -j2 && \
     make install && \
     pkg-config --modversion opencv4 && \
