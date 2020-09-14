@@ -1,7 +1,7 @@
 FROM ubuntu:20.04
 
 # Set opencv version, default currently latest (explicitly numbered)
-ARG OPENCV_RELEASE=4.4.0
+ARG OPENCV_RELEASE=4.3.0
 # Version specific opencv build flags, https://github.com/opencv/opencv/blob/4.4.0/CMakeLists.txt & module disables
 # Optionally set them as "-D BUILD_OPTION=ON -D BUILD_opencv_module=OFF"
 ARG ADDITIONAL_BUILD_FLAGS
