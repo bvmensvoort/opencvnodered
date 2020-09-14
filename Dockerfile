@@ -62,12 +62,12 @@ RUN apt-get update && \
 RUN export LANG=C.UTF-8
 
 # Download and build OpenCV
-RUN if [ -n "${VERBOSE}" ]; then \
-        date && \
-        cmake --version && \
-        nproc \
-    ;fi && \
-    mkdir -p /tmp/opencv_build && cd /tmp/opencv_build && \
+# RUN if [ -n "${VERBOSE}" ]; then \
+#         date && \
+#         cmake --version && \
+#         nproc \
+#     ;fi && \
+RUN mkdir -p /tmp/opencv_build && cd /tmp/opencv_build && \
     git clone https://github.com/opencv/opencv && \
     git clone https://github.com/opencv/opencv_contrib && \
     if [ -n "${OPENCV_RELEASE}" ]; then \
