@@ -62,12 +62,13 @@ RUN apt-get update && \
 RUN export LANG=C.UTF-8
 
 # Download and build OpenCV
-RUN if [ -n "${VERBOSE}" ]; then \
+RUN export OPENCV_INSTALL_PATH=/opencv_path && \
+    if [ -n "${VERBOSE}" ]; then \
         date && \
         cmake --version && \
         nproc \
     ;fi && \
-    mkdir -p /tmp/opencv_build && cd /tmp/opencv_build && \
+    mkdir -p ${OPENCV_INSTALL_PATH} && cd ${OPENCV_INSTALL_PATH} && \
     git clone https://github.com/opencv/opencv && \
     git clone https://github.com/opencv/opencv_contrib && \
     if [ -n "${OPENCV_RELEASE}" ]; then \
@@ -77,10 +78,10 @@ RUN if [ -n "${VERBOSE}" ]; then \
         git checkout tags/${OPENCV_RELEASE} && \
         cd .. \
     ;fi && \
-    cd /tmp/opencv_build && \
+    cd ${OPENCV_INSTALL_PATH} && \
     mkdir -p build && cd build && \
     cmake --debug-output \
-        -D OPENCV_EXTRA_MODULES_PATH=/tmp/opencv_build/opencv_contrib/modules \
+        -D OPENCV_EXTRA_MODULES_PATH=${OPENCV_INSTALL_PATH}/opencv_contrib/modules \
         -D CMAKE_BUILD_TYPE=RELEASE \
         -D CMAKE_INSTALL_PREFIX=/usr/local \
         -D BUILD_EXAMPLES=OFF \
@@ -102,7 +103,7 @@ RUN if [ -n "${VERBOSE}" ]; then \
         -D INSTALL_C_EXAMPLES=OFF \
         -D INSTALL_PYTHON_EXAMPLES=OFF \
         ${ADDITIONAL_BUILD_FLAGS} \
-        /tmp/opencv_build/opencv && \
+        ${OPENCV_INSTALL_PATH}/opencv && \
     make -j2 && \
     make install && \
     pkg-config --modversion opencv4 && \
