@@ -3,9 +3,10 @@ FROM dkimg/opencv:4.4.0-ubuntu
 # Set nodered version, at the moment it is 1.1.3.
 ARG NODERED_RELEASE=latest
 # Set NodeJS version, at the moment it is 10.19.0~dfsg-3ubuntu1
-ARG NODEJS_RELEASE=10.19.\*
+ARG NODEJS_RELEASE=latest
 
 RUN export PKG_CONFIG_OPENCV4=1 && \
+    apt-get update && \
     if [ -n "${NODEJS_RELEASE}" ]; \
         then apt-get install -y nodejs=${NODEJS_RELEASE} npm; \
         else apt-get install -y nodejs npm; \
