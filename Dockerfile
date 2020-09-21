@@ -12,7 +12,7 @@ RUN export PKG_CONFIG_OPENCV4=1 && \
     fi && \
     if [ -n "${VERBOSE}" ]; then \
         node -v \
-    ;fi \
+    ;fi && \
     # /usr/src/node-red: Home directory for Node-RED application source code.
     # /data: User data directory, contains flows, config and nodes.
     mkdir -p /usr/src/node-red /data && \
