@@ -7,6 +7,7 @@ ARG NODEJS_RELEASE=latest
 
 RUN export PKG_CONFIG_OPENCV4=1 && \
     apt-get update && \
+    apt-get install -y --no-install-recommends pkg-config && \
     if [ -n "${NODEJS_RELEASE}" ]; \
         then apt-get install -y nodejs=${NODEJS_RELEASE} npm; \
         else apt-get install -y nodejs npm; \
