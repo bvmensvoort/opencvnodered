@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 # Set opencv version, default currently latest (explicitly numbered)
 ARG OPENCV_RELEASE=4.4.0
