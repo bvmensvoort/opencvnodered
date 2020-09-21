@@ -2,12 +2,17 @@ FROM dkimg/opencv:4.4.0-ubuntu
 
 # Set nodered version, at the moment it is 1.1.3.
 ARG NODERED_RELEASE=latest
-# Set NodeJS version, at the moment it is 8.10.0~dfsg-2ubuntu0.4
-ARG NODEJS_RELEASE=8.10.\*
+# Set NodeJS version, at the moment it is 10.19.0~dfsg-3ubuntu1
+ARG NODEJS_RELEASE=10.19.\*
 
-# Setup Node-Red
 RUN export PKG_CONFIG_OPENCV4=1 && \
-    apt-get install -y nodejs=${NODEJS_RELEASE} npm && \
+    if [ -n "${NODEJS_RELEASE}" ]; \
+        then apt-get install -y nodejs=${NODEJS_RELEASE} npm; \
+        else apt-get install -y nodejs npm; \
+    fi && \
+    if [ -n "${VERBOSE}" ]; then \
+        node -v \
+    ;fi \
     # /usr/src/node-red: Home directory for Node-RED application source code.
     # /data: User data directory, contains flows, config and nodes.
     mkdir -p /usr/src/node-red /data && \
