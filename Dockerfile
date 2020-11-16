@@ -8,6 +8,14 @@ WORKDIR /opt/build
 RUN set -ex \
     && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
+        build-essential \
+        wget unzip \
+    && wget --no-check-certificate https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip -O opencv.zip \
+    && wget --no-check-certificate https://github.com/opencv/opencv_contrib/archive/${OPENCV_VERSION}.zip -O opencv_contrib.zip
+
+RUN set -ex \
+    && apt-get -qq update \
+    && apt-get -qq install -y --no-install-recommends \
         build-essential cmake \
         wget unzip \
         libhdf5-103-1 libhdf5-dev \
