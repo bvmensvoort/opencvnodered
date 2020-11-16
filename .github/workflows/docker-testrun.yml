@@ -1,0 +1,60 @@
+name: Node-RED with OpenCV
+
+on:
+  push:
+    branches: [ develop, testblog6 ]
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  build:
+    runs-on: ubuntu-20.10
+    env:      
+      DOCKER_REGISTRY: registry.hub.docker.com 
+      DOCKER_IMAGE: bvmensvoort/opencvnodered
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}  
+      DOCKER_TARGET_PLATFORMS: linux/arm/v7
+      OPENCV_VERSION: 4.5.0
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v2.2.0
+      #with:
+        # Repository name with owner. For example, actions/checkout
+        #repository: # optional, default is ${{ github.repository }}
+        # The branch, tag or SHA to checkout. When checking out the repository that triggered a workflow, this defaults to the reference or SHA for that event.  Otherwise, defaults to `master`.
+        #ref: # optional      
+
+    - name: Set up Docker Buildx      
+      uses: crazy-max/ghaction-docker-buildx@v1      
+      with:        
+        buildx-version: latest
+    
+    - name: Prepare
+      if: success()
+      id: prepare
+      run: |
+        VERSION=test
+        TAGS="--tag ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${VERSION}"
+
+        echo ::set-output name=docker_platform::${DOCKER_TARGET_PLATFORMS}
+        echo ::set-output name=docker_image::${DOCKER_REGISTRY}/${DOCKER_IMAGE}
+        echo ::set-output name=buildx-version::${GITHUB_RUN_NUMBER}
+        echo ::set-output name=tags::${TAGS}
+        echo ::set-output name=opencv-release::${OPENCV_RELEASE}
+        echo ::set-output name=nodered-release::${NODERED_RELEASE}
+        echo ::set-output name=nodejs-release::${NODEJS_RELEASE}
+
+    - name: Build and push image (using buildx)
+      if: success()
+      run: |
+        docker buildx build \
+        --platform ${{ steps.prepare.outputs.docker_platform }} \
+        ${{ steps.prepare.outputs.tags }} \
+        --file ./Dockerfile \
+        --build-arg OPENCV_RELEASE=${{ steps.prepare.outputs.opencv-release }} \
+        --build-arg NODERED_RELEASE=${{ steps.prepare.outputs.nodered-release }} \
+        --build-arg NODEJS_RELEASE=${{ steps.prepare.outputs.nodejs-release }} \
+        .
