@@ -1,102 +1,48 @@
-FROM ubuntu:20.10
+FROM armindocachada/tensorflow2-raspberrypi4:2.3.0-cp35-none-linux_armv7l
 
-ARG OPENCV_VERSION=4.5.0
-ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get -y install unzip
+RUN apt-get install -y build-essential
+RUN apt-get -y install libjpeg-dev libpng-dev libtiff-dev
+RUN apt-get -y install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
+RUN apt-get -y install libxvidcore-dev libx264-dev
+RUN apt-get install -y python3-dev
+RUN apt-get -y install libgtk2.0-dev
 
-WORKDIR /opt/build
+ENV OPENCV_VERSION=4.5.0
 
-RUN set -ex \
-    && apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends \
-        build-essential \
-        wget unzip \
-    && wget --no-check-certificate https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip -O opencv.zip \
-    && wget --no-check-certificate https://github.com/opencv/opencv_contrib/archive/${OPENCV_VERSION}.zip -O opencv_contrib.zip
+# building open-cv
+WORKDIR /root
+RUN wget https://github.com/opencv/opencv/archive/$OPENCV_VERSION.zip
+RUN wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/$OPENCV_VERSION.zip
+RUN unzip -o $OPENCV_VERSION.zip && unzip opencv_contrib.zip && mv opencv_contrib-$OPENCV_VERSION opencv_contrib
+RUN apt-get -y install cmake
+WORKDIR /root/opencv-$OPENCV_VERSION/build
 
-RUN set -ex \
-    && apt-get -qq update \
-    && apt-get -qq install -y --no-install-recommends \
-        build-essential cmake \
-        wget unzip \
-        libhdf5-103-1 libhdf5-dev \
-        libopenblas0 libopenblas-dev \
-        libprotobuf23 libprotobuf-dev \
-        libjpeg8 libjpeg8-dev \
-        libpng16-16 libpng-dev \
-        libtiff5 libtiff-dev \
-        libwebp6 libwebp-dev \
-        libopenjp2-7 libopenjp2-7-dev \
-        libtbb2 libtbb-dev \
-        libeigen3-dev \
-        tesseract-ocr tesseract-ocr-por libtesseract-dev \
-        python3 python3-pip python3-numpy python3-dev \
-    && wget -q --no-check-certificate https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip -O opencv.zip \
-    && wget -q --no-check-certificate https://github.com/opencv/opencv_contrib/archive/${OPENCV_VERSION}.zip -O opencv_contrib.zip \
-    && unzip -qq opencv.zip -d /opt && rm -rf opencv.zip \
-    && unzip -qq opencv_contrib.zip -d /opt && rm -rf opencv_contrib.zip \
-    && cmake \
-        -D CMAKE_BUILD_TYPE=RELEASE \
-        -D CMAKE_INSTALL_PREFIX=/usr/local \
-        -D OPENCV_EXTRA_MODULES_PATH=/opt/opencv_contrib-${OPENCV_VERSION}/modules \
-        -D EIGEN_INCLUDE_PATH=/usr/include/eigen3 \
-        -D OPENCV_ENABLE_NONFREE=ON \
-        -D WITH_JPEG=ON \
-        -D WITH_PNG=ON \
-        -D WITH_TIFF=ON \
-        -D WITH_WEBP=ON \
-        -D WITH_JASPER=ON \
-        -D WITH_EIGEN=ON \
-        -D WITH_TBB=ON \
-        -D WITH_LAPACK=ON \
-        -D WITH_PROTOBUF=ON \
-        -D WITH_V4L=OFF \
-        -D WITH_GSTREAMER=OFF \
-        -D WITH_GTK=OFF \
-        -D WITH_QT=OFF \
-        -D WITH_CUDA=OFF \
-        -D WITH_VTK=OFF \
-        -D WITH_OPENEXR=OFF \
-        -D WITH_FFMPEG=OFF \
-        -D WITH_OPENCL=OFF \
-        -D WITH_OPENNI=OFF \
-        -D WITH_XINE=OFF \
-        -D WITH_GDAL=OFF \
-        -D WITH_IPP=OFF \
-        -D BUILD_OPENCV_PYTHON3=ON \
-        -D BUILD_OPENCV_PYTHON2=OFF \
-        -D BUILD_OPENCV_JAVA=OFF \
-        -D BUILD_TESTS=OFF \
-        -D BUILD_IPP_IW=OFF \
-        -D BUILD_PERF_TESTS=OFF \
-        -D BUILD_EXAMPLES=OFF \
-        -D BUILD_ANDROID_EXAMPLES=OFF \
-        -D BUILD_DOCS=OFF \
-        -D BUILD_ITT=OFF \
-        -D INSTALL_PYTHON_EXAMPLES=OFF \
-        -D INSTALL_C_EXAMPLES=OFF \
-        -D INSTALL_TESTS=OFF \
-        /opt/opencv-${OPENCV_VERSION} \
-    && make -j$(nproc) \
-    && make install \
-    && rm -rf /opt/build/* \
-    && rm -rf /opt/opencv-${OPENCV_VERSION} \
-    && rm -rf /opt/opencv_contrib-${OPENCV_VERSION} \
-    && apt-get -qq remove -y \
-        software-properties-common \
-        build-essential cmake \
-        libhdf5-dev \
-        libopenblas-dev \
-        libprotobuf-dev \
-        libjpeg8-dev \
-        libpng-dev \
-        libtiff-dev \
-        libwebp-dev \
-        libopenjp2-7-dev \
-        libtbb-dev \
-        libtesseract-dev \
-        python3-dev \
-    && apt-get -qq autoremove \
-    && apt-get -qq clean
+RUN cmake -D ENABLE_NEON=ON  -D ENABLE_VFPV3=ON \
+      -D OPENCV_ENABLE_NONFREE=ON \
+      -D CMAKE_BUILD_TYPE=RELEASE \
+      -D CMAKE_INSTALL_PREFIX=/usr/local \
+      -D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
+      -D WITH_FFMPEG=ON -D WITH_TBB=ON -D WITH_GTK=ON -D WITH_V4L=ON -D WITH_OPENGL=ON -D WITH_CUBLAS=ON -DWITH_QT=OFF \
+      -DCUDA_NVCC_FLAGS="-D_FORCE_INLINES"  --prefix=/usr --extra-version='1~16.04.york0' --toolchain=hardened --libdir=/usr/lib/x86_64-linux-gnu \
+      --incdir=/usr/include/x86_64-linux-gnu --arch=amd64 --enable-gpl --disable-stripping --enable-avresample --disable-filter=resample \
+      --enable-avisynth --enable-gnutls --enable-ladspa --enable-libaom --enable-libass --enable-libbluray --enable-libbs2b --enable-libcaca \
+      --enable-libcdio --enable-libcodec2 --enable-libflite --enable-libfontconfig --enable-libfreetype --enable-libfribidi --enable-libgme \
+      --enable-libgsm --enable-libjack --enable-libmp3lame --enable-libmysofa --enable-libopenjpeg --enable-libopenmpt --enable-libopus \
+      --enable-libpulse --enable-librsvg --enable-librubberband --enable-libshine --enable-libsnappy --enable-libsoxr --enable-libspeex \
+      --enable-libssh --enable-libtheora --enable-libtwolame --enable-libvidstab --enable-libvorbis --enable-libvpx --enable-libwavpack \
+      --enable-libwebp --enable-libx265 --enable-libxml2 --enable-libxvid --enable-libzmq --enable-libzvbi --enable-lv2 --enable-omx \
+      --enable-openal --enable-opengl --enable-sdl2 --enable-libdc1394 --enable-libdrm --enable-libiec61883 --enable-chromaprint --enable-frei0r \
+      --enable-libopencv --enable-libx264 --enable-shared ..
+
+RUN make -j4
+RUN make install
+RUN ldconfig
+
+WORKDIR /root/
+RUN rm -fr /root/opencv* && rm -fr /root/${OPENCV_VERSION}.zip
+RUN export READTHEDOCS=True && pip3 install picamera[array]
+RUN pip3 install matplotlib && apt-get install python3-tk
 
 # Set nodered version, at the moment it is 1.1.3.
 ARG NODERED_RELEASE=latest
@@ -128,3 +74,4 @@ VOLUME ["/data"]
 EXPOSE 1880
 
 ENTRYPOINT ["npm", "start", "--cache", "/data/.npm", "--", "--userDir", "/data"]
+CMD ["tail","-f","/dev/null"]
