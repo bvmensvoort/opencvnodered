@@ -1,14 +1,6 @@
 FROM armindocachada/tensorflow2-raspberrypi4:2.3.0-cp35-none-linux_armv7l
 
 RUN apt-get update && apt-get -y install unzip
-
-
-
-RUN apt-get install -y curl && \
-    curl -sL https://deb.nodesource.com/setup_15.x | bash - && \
-    apt-get install -y nodejs && \
-    node -v
-
 RUN apt-get install -y build-essential
 RUN apt-get -y install libjpeg-dev libpng-dev libtiff-dev
 RUN apt-get -y install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
@@ -52,14 +44,16 @@ RUN rm -fr /root/opencv* && rm -fr /root/${OPENCV_VERSION}.zip
 RUN export READTHEDOCS=True && pip3 install picamera[array]
 RUN pip3 install matplotlib && apt-get -y install python3-tk
 
-# Set nodered version, at the moment it is 1.1.3.
+# Set nodered version, at the moment it is 1.2.5.
 ARG NODERED_RELEASE=latest
-# Set NodeJS version, at the moment it is 8.10.0~dfsg-2ubuntu0.4
-ARG NODEJS_RELEASE=8.10.\*
+ARG NODEJS_URL=https://deb.nodesource.com/setup_15.x
 
 # Setup Node-Red
 RUN export PKG_CONFIG_OPENCV4=1 && \
-    apt-get install -y nodejs=${NODEJS_RELEASE} npm && \
+    apt-get install -y curl && \
+    curl -sL {NODEJS_URL} | bash - && \
+    apt-get install -y nodejs npm && \
+    node -v && \
     # /usr/src/node-red: Home directory for Node-RED application source code.
     # /data: User data directory, contains flows, config and nodes.
     mkdir -p /usr/src/node-red /data && \
