@@ -1,10 +1,15 @@
 FROM armindocachada/tensorflow2-raspberrypi4:2.3.0-cp35-none-linux_armv7l
 
 RUN apt-get update && apt-get -y install unzip
-RUN apt-get install -y build-essential
-RUN apt-get -y install nodejs
-RUN node -v
 
+
+
+RUN apt-get install -y curl && \
+    curl -sL https://deb.nodesource.com/setup_15.x | bash - && \
+    apt-get install -y nodejs && \
+    node -v
+
+RUN apt-get install -y build-essential
 RUN apt-get -y install libjpeg-dev libpng-dev libtiff-dev
 RUN apt-get -y install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
 RUN apt-get -y install libxvidcore-dev libx264-dev
