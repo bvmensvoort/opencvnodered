@@ -2,6 +2,9 @@ FROM armindocachada/tensorflow2-raspberrypi4:2.3.0-cp35-none-linux_armv7l
 
 RUN apt-get update && apt-get -y install unzip
 RUN apt-get install -y build-essential
+RUN apt-get -y install nodejs
+RUN node -v
+
 RUN apt-get -y install libjpeg-dev libpng-dev libtiff-dev
 RUN apt-get -y install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
 RUN apt-get -y install libxvidcore-dev libx264-dev
@@ -42,7 +45,7 @@ RUN ldconfig
 WORKDIR /root/
 RUN rm -fr /root/opencv* && rm -fr /root/${OPENCV_VERSION}.zip
 RUN export READTHEDOCS=True && pip3 install picamera[array]
-RUN pip3 install matplotlib && apt-get install python3-tk
+RUN pip3 install matplotlib && apt-get -y install python3-tk
 
 # Set nodered version, at the moment it is 1.1.3.
 ARG NODERED_RELEASE=latest
