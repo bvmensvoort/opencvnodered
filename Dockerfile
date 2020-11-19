@@ -6,9 +6,10 @@ RUN apt-get update && apt-get -y install unzip
 
 # Setup Node-Red
 RUN export PKG_CONFIG_OPENCV4=1 && \
-    apt-get install -y curl && \
-    curl -sL {NODEJS_URL} | bash - && \
-    apt-get install -y nodejs && \
+    apt-get install -y curl
+RUN curl -sL {NODEJS_URL} | bash - 
+RUN curl -sL https://deb.nodesource.com/setup_15.x | bash - 
+RUN apt-get install -y nodejs && \
     node -v && \
     npm -v && \
     # /usr/src/node-red: Home directory for Node-RED application source code.
