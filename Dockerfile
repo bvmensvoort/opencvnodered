@@ -108,7 +108,7 @@ RUN mkdir /opencv && \
         --enable-libx264 \
         --enable-shared \
       ${ADDITIONAL_BUILD_FLAGS} \
-      ../opencv && \
+      ../opencv-${OPENCV_VERSION} && \
     make -j4 && \
     make install && \
     ldconfig
