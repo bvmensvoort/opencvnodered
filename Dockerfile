@@ -15,11 +15,11 @@ RUN export LANG=C.UTF-8
 # Install dependencies for opencv
 RUN apt-get update && \
     apt-get upgrade && \
-    apt-get -y install unzip build-essential && \
+    DEBIAN_FRONTEND=noninteractive apt-get -y install unzip build-essential && \
     apt-get -y install libjpeg-dev libpng-dev libtiff-dev && \
     apt-get -y install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev && \
     apt-get -y install libxvidcore-dev libx264-dev && \
-    apt-get install -y python3-dev && \
+    apt-get -y install python3-dev && \
     apt-get -y install libgtk2.0-dev && \
     apt-get -y install cmake
 
