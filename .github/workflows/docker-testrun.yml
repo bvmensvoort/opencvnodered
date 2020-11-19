@@ -45,7 +45,7 @@ jobs:
         echo ::set-output name=tags::${TAGS}
         echo ::set-output name=opencv-release::${OPENCV_RELEASE}
         echo ::set-output name=nodered-release::${NODERED_RELEASE}
-        echo ::set-output name=nodejs-release::${NODEJS_RELEASE}
+        echo ::set-output name=nodejs-release::${NODEJS_URL}
 
     - name: Build and push image (using buildx)
       if: success()
@@ -56,5 +56,5 @@ jobs:
         --file ./Dockerfile \
         --build-arg OPENCV_RELEASE=${{ steps.prepare.outputs.opencv-release }} \
         --build-arg NODERED_RELEASE=${{ steps.prepare.outputs.nodered-release }} \
-        --build-arg NODEJS_RELEASE=${{ steps.prepare.outputs.nodejs-release }} \
+        --build-arg NODEJS_URL=${{ steps.prepare.outputs.nodejs-release }} \
         .

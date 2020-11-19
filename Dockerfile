@@ -1,33 +1,13 @@
 FROM armindocachada/tensorflow2-raspberrypi4:2.3.0-cp35-none-linux_armv7l
-ARG NODERED_RELEASE=latest
-ARG NODEJS_URL=https://deb.nodesource.com/setup_15.x
+ENV OPENCV_VERSION=4.5.0
 
 RUN apt-get update && apt-get -y install unzip
-
-# Setup Node-Red
-RUN export PKG_CONFIG_OPENCV4=1 && \
-    apt-get install -y curl
-RUN curl -sL {NODEJS_URL} | bash - 
-RUN curl -sL https://deb.nodesource.com/setup_15.x | bash - 
-RUN apt-get install -y nodejs && \
-    node -v && \
-    npm -v && \
-    # /usr/src/node-red: Home directory for Node-RED application source code.
-    # /data: User data directory, contains flows, config and nodes.
-    mkdir -p /usr/src/node-red /data && \
-    cd /usr/src/node-red && \
-    npm install node-red@${NODERED_RELEASE} && \
-    cd /data && \
-    npm install --save node-red-contrib-opencv
-
 RUN apt-get install -y build-essential
 RUN apt-get -y install libjpeg-dev libpng-dev libtiff-dev
 RUN apt-get -y install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
 RUN apt-get -y install libxvidcore-dev libx264-dev
 RUN apt-get install -y python3-dev
 RUN apt-get -y install libgtk2.0-dev
-
-ENV OPENCV_VERSION=4.5.0
 
 # building open-cv
 WORKDIR /root
@@ -70,7 +50,7 @@ RUN pip3 install matplotlib && apt-get -y install python3-tk
 # Setup Node-Red
 RUN export PKG_CONFIG_OPENCV4=1 && \
     apt-get install -y curl && \
-    curl -sL {NODEJS_URL} | bash - && \
+    curl -sL ${NODEJS_URL} | bash - && \
     apt-get install -y nodejs npm && \
     node -v && \
     # /usr/src/node-red: Home directory for Node-RED application source code.
