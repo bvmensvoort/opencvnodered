@@ -14,7 +14,7 @@ RUN export LANG=C.UTF-8
 
 # Install dependencies for opencv
 RUN apt-get update && \
-    apt-get upgrade && \
+    apt-get -y upgrade && \
     DEBIAN_FRONTEND=noninteractive apt-get -y install unzip build-essential && \
     apt-get -y install libjpeg-dev libpng-dev libtiff-dev && \
     apt-get -y install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev && \
