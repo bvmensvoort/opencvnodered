@@ -1,6 +1,22 @@
 FROM armindocachada/tensorflow2-raspberrypi4:2.3.0-cp35-none-linux_armv7l
 
 RUN apt-get update && apt-get -y install unzip
+
+# Setup Node-Red
+RUN export PKG_CONFIG_OPENCV4=1 && \
+    apt-get install -y curl && \
+    curl -sL {NODEJS_URL} | bash - && \
+    apt-get install -y nodejs && \
+    node -v && \
+    npm -v && \
+    # /usr/src/node-red: Home directory for Node-RED application source code.
+    # /data: User data directory, contains flows, config and nodes.
+    mkdir -p /usr/src/node-red /data && \
+    cd /usr/src/node-red && \
+    npm install node-red@${NODERED_RELEASE} && \
+    cd /data && \
+    npm install --save node-red-contrib-opencv
+
 RUN apt-get install -y build-essential
 RUN apt-get -y install libjpeg-dev libpng-dev libtiff-dev
 RUN apt-get -y install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
