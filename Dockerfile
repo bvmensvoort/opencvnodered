@@ -1,4 +1,6 @@
 FROM armindocachada/tensorflow2-raspberrypi4:2.3.0-cp35-none-linux_armv7l
+ARG NODERED_RELEASE=latest
+ARG NODEJS_URL=https://deb.nodesource.com/setup_15.x
 
 RUN apt-get update && apt-get -y install unzip
 
@@ -61,8 +63,8 @@ RUN export READTHEDOCS=True && pip3 install picamera[array]
 RUN pip3 install matplotlib && apt-get -y install python3-tk
 
 # Set nodered version, at the moment it is 1.2.5.
-ARG NODERED_RELEASE=latest
-ARG NODEJS_URL=https://deb.nodesource.com/setup_15.x
+#ARG NODERED_RELEASE=latest
+#ARG NODEJS_URL=https://deb.nodesource.com/setup_15.x
 
 # Setup Node-Red
 RUN export PKG_CONFIG_OPENCV4=1 && \
