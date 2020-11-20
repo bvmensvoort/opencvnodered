@@ -16,6 +16,8 @@ jobs:
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}  
       DOCKER_TARGET_PLATFORMS: linux/arm/v7
       OPENCV_VERSION: 4.5.0
+      NODERED_VERSION: latest
+      NODEJS_URL: https://deb.nodesource.com/setup_15.x
 
     steps:
 
@@ -54,7 +56,7 @@ jobs:
         --platform ${{ steps.prepare.outputs.docker_platform }} \
         ${{ steps.prepare.outputs.tags }} \
         --file ./Dockerfile \
-        --build-arg OPENCV_VERSION=${{ steps.prepare.outputs.opencv-release }} \
-        --build-arg NODERED_VERSION=${{ steps.prepare.outputs.nodered-release }} \
-        --build-arg NODEJS_URL=${{ steps.prepare.outputs.nodejs-release }} \
+        --build-arg OPENCV_VERSION=${{ steps.prepare.outputs.opencv-version }} \
+        --build-arg NODERED_VERSION=${{ steps.prepare.outputs.nodered-version }} \
+        --build-arg NODEJS_URL=${{ steps.prepare.outputs.nodejs-url }} \
         .
