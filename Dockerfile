@@ -13,10 +13,10 @@ ARG ADDITIONAL_BUILD_FLAGS
 RUN export LANG=C.UTF-8
 
 RUN echo \
-    ${OPENCV_VERSION} ,, \
-    ${NODEJS_URL} ,, \
-    ${NODERED_VERSION} ,, \
-    ${ADDITIONAL_BUILD_FLAGS} ,,
+    OPENCV_VERSION=${OPENCV_VERSION} -- \
+    NODEJS_URL=${NODEJS_URL} -- \
+    NODERED_VERSION=${NODERED_VERSION} -- \
+    ADDITIONAL_BUILD_FLAGS=${ADDITIONAL_BUILD_FLAGS}
 
 # Install dependencies for opencv
 RUN apt-get update && \
@@ -40,13 +40,20 @@ RUN mkdir /opencv && \
     mkdir build && \
     cd build && \    
     cmake \
+      -D OPENCV_GENERATE_PKGCONFIG=ON \
       -D ENABLE_NEON=ON \
       -D ENABLE_VFPV3=ON \
       -D OPENCV_ENABLE_NONFREE=ON \
       -D CMAKE_BUILD_TYPE=RELEASE \
       -D CMAKE_INSTALL_PREFIX=/usr/local \
       -D OPENCV_EXTRA_MODULES_PATH=../opencv_contrib/modules \
-      -D WITH_FFMPEG=ON -D WITH_TBB=ON -D WITH_GTK=ON -D WITH_V4L=ON -D WITH_OPENGL=ON -D WITH_CUBLAS=ON -DWITH_QT=OFF \
+      -D WITH_FFMPEG=ON \
+      -D WITH_TBB=ON \
+      -D WITH_GTK=ON \
+      -D WITH_V4L=ON \
+      -D WITH_OPENGL=ON \
+      -D WITH_CUBLAS=ON \
+      -DWITH_QT=OFF \
       -DCUDA_NVCC_FLAGS="-D_FORCE_INLINES" \
         --prefix=/usr \
         --extra-version='1~16.04.york0' \
