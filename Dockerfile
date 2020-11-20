@@ -122,8 +122,9 @@ RUN pip3 install matplotlib && apt-get -y install python3-tk
 RUN export PKG_CONFIG_OPENCV4=1 && \
     apt-get install -y curl && \
     curl -sL ${NODEJS_URL} | bash - && \
-    apt-get install -y nodejs npm && \
+    apt-get install -y nodejs && \
     node -v && \
+    npm -v && \
     # /usr/src/node-red: Home directory for Node-RED application source code.
     # /data: User data directory, contains flows, config and nodes.
     mkdir -p /usr/src/node-red /data && \
