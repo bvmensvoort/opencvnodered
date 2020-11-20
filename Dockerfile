@@ -12,6 +12,26 @@ ARG ADDITIONAL_BUILD_FLAGS
 # Used for Python dependencies.
 RUN export LANG=C.UTF-8
 
+RUN echo ${OPENCV_VERSION} /\
+    ${NODEJS_URL} /\
+    ${NODERED_VERSION} /\
+    ${ADDITIONAL_BUILD_FLAGS} /
+
+RUN export PKG_CONFIG_OPENCV4=1 && \
+    apt-get install -y curl && \
+    curl -sL ${NODEJS_URL} | bash - && \
+    apt-get install -y nodejs && \
+    node -v && \
+    npm -v && \
+    # /usr/src/node-red: Home directory for Node-RED application source code.
+    # /data: User data directory, contains flows, config and nodes.
+    mkdir -p /usr/src/node-red /data && \
+    cd /usr/src/node-red && \
+    npm install node-red@${NODERED_VERSION} && \
+    cd /data && \
+    npm install --save node-red-contrib-opencv
+
+
 # Install dependencies for opencv
 RUN apt-get update && \
     apt-get -y upgrade && \

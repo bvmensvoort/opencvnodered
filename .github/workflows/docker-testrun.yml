@@ -43,9 +43,9 @@ jobs:
         echo ::set-output name=docker_image::${DOCKER_REGISTRY}/${DOCKER_IMAGE}
         echo ::set-output name=buildx-version::${GITHUB_RUN_NUMBER}
         echo ::set-output name=tags::${TAGS}
-        echo ::set-output name=opencv-release::${OPENCV_VERSION}
-        echo ::set-output name=nodered-release::${NODERED_VERSION}
-        echo ::set-output name=nodejs-release::${NODEJS_URL}
+        echo ::set-output name=opencv-version::${OPENCV_VERSION}
+        echo ::set-output name=nodered-version::${NODERED_VERSION}
+        echo ::set-output name=nodejs-url::${NODEJS_URL}
 
     - name: Build and push image (using buildx)
       if: success()

@@ -53,7 +53,7 @@ jobs:
         echo ::set-output name=docker_image::${DOCKER_REGISTRY}/${DOCKER_IMAGE}
         echo ::set-output name=buildx-version::${GITHUB_RUN_NUMBER}
         echo ::set-output name=tags::${TAGS}
-
+        
     - name: Docker Login
       if: success()      
       run: |
@@ -66,7 +66,8 @@ jobs:
         --platform ${{ steps.prepare.outputs.docker_platform }} \
         ${{ steps.prepare.outputs.tags }} \
         --file ./Dockerfile \
-        --build-arg OPENCV_VERSION=4.3.0 \
+        --build-arg OPENCV_VERSION=4.5.0 \
         --build-arg NODERED_VERSION=latest \
+        --build-arg NODEJS_URL=https://deb.nodesource.com/setup_15.x \
         --output type=image,push=true \
         .
