@@ -142,7 +142,7 @@ RUN export PKG_CONFIG_OPENCV4=1 && \
     # /data: User data directory, contains flows, config and nodes.
     mkdir -p /usr/src/node-red /data && \
     cd /usr/src/node-red && \
-    npm install node-red@${NODERED_VERSION} && \
+    npm install --save node-red@${NODERED_VERSION} && \
     cd /data
     # npm install --save node-red-contrib-opencv
 
