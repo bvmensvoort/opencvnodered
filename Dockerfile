@@ -22,7 +22,7 @@ RUN export OPENCV_LIB_DIR=/opencv/build/lib && \
     export OPENCV4NODEJS_DISABLE_AUTOBUILD=1 && \
     apt-get -y install git && \
     cd /data && \
-    npm install npmlog git && \
+    npm install npmlog && \
     git clone https://github.com/justadudewhohacks/opencv4nodejs.git && \
     cd opencv4nodejs && \
     git fetch origin pull/762/head:pr762 && \
