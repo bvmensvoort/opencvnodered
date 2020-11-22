@@ -21,10 +21,16 @@ RUN export OPENCV_LIB_DIR=/opencv/build/lib && \
     export OPENCV4NODES_DEBUG_REQUIRE=1 && \
     export OPENCV4NODEJS_DISABLE_AUTOBUILD=1 && \
     cd /data && \
-    npm install npmlog && \
-    npm install --save opencv4nodejs && \
-    cd node_modules/opencv4nodejs && \
+    npm install npmlog git && \
+    git clone https://github.com/justadudewhohacks/opencv4nodejs.git && \
+    cd opencv4nodejs && \
+    git fetch origin pull/762/head:pr762 && \
+    git checkout pr762 && \
+    npm run install && \
     npm run build
+    #npm install --save opencv4nodejs && \
+    #cd node_modules/opencv4nodejs && \
+    #npm run build
 
 # Set work directory
 WORKDIR /usr/src/node-red/node_modules/node-red
