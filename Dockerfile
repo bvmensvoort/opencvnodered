@@ -60,10 +60,15 @@ ENV OPENCV4NODEJS_DISABLE_AUTOBUILD=1
 #apt-get install -y node-gyp && \
 #RUN cd /data/opencv4nodejs && \
 #    npm run install && \
-RUN cd /tmp && \
+RUN export OPENCV_LIB_DIR=/opencv/build/lib && \
+    export OPENCV_INCLUDE_DIR=/opencv/build/include && \
+    export OPENCV_BIN_DIR=/opencv/build/bin && \
+    export OPENCV4NODES_DEBUG_REQUIRE=1 && \
+    export OPENCV4NODEJS_DISABLE_AUTOBUILD=1 && \
+    cd /tmp && \
     mkdir tst && cd tst \
     apt-get install -y nano && \
-    npm install --save npmlog
-
-RUN npm install --save /data/opencv4nodejs/
-    
+    npm install --save npmlog && \
+    cat package.json && \
+    npm install --save /data/opencv4nodejs/ && \
+    cat package.json
