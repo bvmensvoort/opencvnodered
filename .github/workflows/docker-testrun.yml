@@ -64,5 +64,4 @@ jobs:
         --build-arg OPENCV_VERSION=${{ steps.prepare.outputs.opencv-version }} \
         --build-arg NODERED_VERSION=${{ steps.prepare.outputs.nodered-version }} \
         --build-arg NODEJS_URL=${{ steps.prepare.outputs.nodejs-url }} \
-        --output type=image,push=true \
         .

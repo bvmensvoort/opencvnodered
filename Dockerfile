@@ -57,6 +57,10 @@ ENV OPENCV_BIN_DIR=/opencv/build/bin
 ENV OPENCV4NODES_DEBUG_REQUIRE=1
 ENV OPENCV4NODEJS_DISABLE_AUTOBUILD=1
 
-RUN apt-get install -y node-gyp && \
-    cd /data/opencv4nodejs && \
-    npm run install
+#apt-get install -y node-gyp && \
+RUN cd /data/opencv4nodejs && \
+    npm run install && \
+    cd /tmp && \
+    mkdir tst && cd tst \
+    npm install --save /data/opencv4nodejs/
+    
