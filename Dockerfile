@@ -60,7 +60,7 @@ RUN mkdir /opencv && \
         --toolchain=hardened \
         --libdir=/usr/lib/x86_64-linux-gnu \
         --incdir=/usr/include/x86_64-linux-gnu \
-        --arch=amd64 \
+        --arch=arm32 \
         --enable-gpl \
         --disable-stripping \
         --enable-avresample \
