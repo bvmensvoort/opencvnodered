@@ -62,5 +62,7 @@ ENV OPENCV4NODEJS_DISABLE_AUTOBUILD=1
 #    npm run install && \
 RUN cd /tmp && \
     mkdir tst && cd tst \
+    apt-get install -y nano && \
+    npm install --save npmlog && \
     npm install --save /data/opencv4nodejs/
     
