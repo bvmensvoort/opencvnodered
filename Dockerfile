@@ -24,11 +24,12 @@ RUN export OPENCV_LIB_DIR=/opencv/build/lib && \
     cd /data && \
     npm install npmlog && \
     git clone https://github.com/justadudewhohacks/opencv4nodejs.git && \
-    cd opencv4nodejs && \
+    cd /data/opencv4nodejs && \
     git fetch origin pull/762/head:pr762 && \
     git checkout pr762 && \
     npm install && \
-    npm run build
+    npm run build && \
+    npm run install
     #npm install --save opencv4nodejs && \
     #cd node_modules/opencv4nodejs && \
     #npm run build
