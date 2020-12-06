@@ -1,5 +1,12 @@
 FROM bvmensvoort/opencvnodered:opencv4.5.0
 
+# Set NodeJS source URL
+ARG NODEJS_URL=https://deb.nodesource.com/setup_15.x
+# Set Node-RED version
+ARG NODERED_VERSION=latest
+# Used for Python dependencies.
+RUN export LANG=C.UTF-8
+
 RUN export READTHEDOCS=True && pip3 install picamera[array]
 RUN pip3 install matplotlib && apt-get -y install python3-tk
 
